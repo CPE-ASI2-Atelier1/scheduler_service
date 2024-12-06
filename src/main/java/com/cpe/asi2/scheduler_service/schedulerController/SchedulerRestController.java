@@ -3,6 +3,7 @@ package com.cpe.asi2.scheduler_service.schedulerController;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.cpe.asi2.atelier1.dto.CardDTO;
 
 import com.cpe.asi2.scheduler_service.schedulerService.SchedulerService;
 
@@ -31,20 +32,6 @@ public class SchedulerRestController {
 	@RequestMapping(method=RequestMethod.POST,value="/Properties")
 	public void putProperties(@RequestBody String properties, @RequestBody Integer id) {
 		schedulerService.putProperties(properties, id);
-		
-		if (schedulerService.verifyIfCardCompleted(id)) {
-			
-			//TODO: Faire la requête pour créer la carte
-			
-			// J'aimerais bien MAIS il n'y a pas de description et d'image dans le card DTO...
-			// Idée --> Faire une completeCardDTO qui étend CardDTO et qui ajoute ces deux attributs
-			// MAIS ça veut dire qu'on doit bouger la BDD d'origine et que les cartes legacy poseront problème ...
-			
-			System.out.println("The card is completed and has been added to the inventory");
-			
-			schedulerService.deleteCard(id);
-			System.out.println("The card has been removed from the incompleted cards");
-		}
 	}
 	
 }

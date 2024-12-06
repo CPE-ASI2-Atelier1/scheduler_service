@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 public class SchedulerEntity {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="Id")
 	private Integer id;
 	
