@@ -1,13 +1,18 @@
 package com.cpe.asi2.scheduler_service.schedulerController;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.cpe.asi2.atelier1.dto.CardDTO;
+import com.cpe.asi2.atelier1.dto.PublicCardDTO;
 
 import com.cpe.asi2.scheduler_service.schedulerService.SchedulerService;
 
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -19,24 +24,51 @@ public class SchedulerRestController {
 		this.schedulerService = schedulerService;
 	}
 	
-	@RequestMapping(method=RequestMethod.POST, value="/Image")
-	public void putImage (@RequestBody String image_url, @RequestBody Integer id) {
-		schedulerService.putImage(image_url, id);
+//	@RequestMapping(method=RequestMethod.POST, value="/Image")
+//	public void putImage (@RequestParam String image_url, @RequestParam Integer id) {
+//		schedulerService.putImage(image_url, id);
+//	}
+//	
+//	@RequestMapping(method=RequestMethod.POST,value="/Description")
+//	public void putDescription(@RequestParam String description, @RequestParam Integer id) {
+//		schedulerService.putDescription(description, id);
+//	}
+//	
+//	@RequestMapping(method=RequestMethod.POST,value="/Properties")
+//	public void putProperties(@RequestBody CardProperties properties, @RequestParam Integer id) {
+//		schedulerService.putProperties(properties, id);
+//	}
+	
+	// Front request
+	@RequestMapping(method=RequestMethod.GET, value="/wipCards")
+	public List<PublicCardDTO> GetWIPCards() {
+		return schedulerService.getWIPCards();
 	}
 	
-	@RequestMapping(method=RequestMethod.POST,value="/Description")
-	public void putDescription(@RequestBody String description, @RequestBody Integer id) {
-		schedulerService.putDescription(description, id);
+	// Front request
+	@RequestMapping(method=RequestMethod.GET, value="/getWipCard/{id}")
+	public PublicCardDTO GetWipCardById(@PathVariable String id) {
+		return schedulerService.getWipCardById(id);
 	}
 	
-	@RequestMapping(method=RequestMethod.POST,value="/Properties")
-	public void putProperties(@RequestBody String properties, @RequestBody Integer id) {
-		schedulerService.putProperties(properties, id);
+	// Front request
+	@RequestMapping(method=RequestMethod.POST, value="/generateProps")
+	public Integer GenerateProps(PublicCardDTO card) {
+		return schedulerService.generateProps(card);
 	}
 	
+	// Properties generation service request
+	@RequestMapping(method=RequestMethod.POST, value="/receiveProperties")
+	public void ReceiveProperties(CardProperties properties) {
+		schedulerService.receiveProperties(properties);
+	}
+	
+	// Front request
+	@RequestMapping(method=RequestMethod.POST, value="/updateWIP")
+	public void UpdateWIP(PublicCardDTO card) {
+		schedulerService.updateWIP(card);
+	}
 }
-
-//TODO : Gérer la génération unique d'IDs
 
 // Pas de DTO car ca permet de transférer des objets à des gens or moi je popule juste une BDD
 

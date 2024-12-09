@@ -11,81 +11,157 @@ public class SchedulerEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="Id")
+	@Column(name="id")
 	private Integer id;
+
+	@Column(name="user_id")
+	private Integer userId;
 	
-	@Column(name="ImageUrl")
+	@Column(name="energy")
+	private float energy;
+	
+	@Column(name="hp")
+	private float hp;
+	
+	@Column(name="defence")
+	private float defence;
+	
+	@Column(name="attack")
+	private float attack;
+	
+	@Column(name="price")
+	private float price;
+	
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="family")
+	private String family;
+	
+	@Column(name="affinity")
+	private String affinity;
+
+	@Column(name="image_url")
 	private String imageUrl;
 	
-	@Column(name="Description")
+	@Column(name="small_image_url")
+	private String smallImageUrl;
+	
+	@Column(name="description")
 	private String description;
 	
-	@Column(name="Properties")
-	private String properties;
-	
-	@Column(name="Complete")
+	@Column(name="is_prop_ok")
 	private Boolean complete;
 	
-	/**
-	 * @return the complete
-	 */
-	public Boolean getComplete() {
-		return complete;
-	}
-	/**
-	 * @param complete the complete to set
-	 */
-	public void setComplete(Boolean complete) {
-		this.complete = complete;
-	}
-	/**
-	 * @return the id
-	 */
 	public Integer getId() {
 		return id;
 	}
-	/**
-	 * @return the imageUrl
-	 */
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public float getEnergy() {
+		return energy;
+	}
+
+	public float getHp() {
+		return hp;
+	}
+
+	public float getDefence() {
+		return defence;
+	}
+
+	public float getAttack() {
+		return attack;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getFamily() {
+		return family;
+	}
+
+	public String getAffinity() {
+		return affinity;
+	}
+
 	public String getImageUrl() {
 		return imageUrl;
 	}
-	/**
-	 * @return the description
-	 */
+
+	public String getSmallImageUrl() {
+		return smallImageUrl;
+	}
+
 	public String getDescription() {
 		return description;
 	}
-	/**
-	 * @return the properties
-	 */
-	public String getProperties() {
-		return properties;
+
+	public Boolean getComplete() {
+		return complete;
 	}
-	/**
-	 * @param id the id to set
-	 */
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	/**
-	 * @param imageUrl the imageUrl to set
-	 */
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public void setEnergy(float energy) {
+		this.energy = energy;
+	}
+
+	public void setHp(float hp) {
+		this.hp = hp;
+	}
+
+	public void setDefence(float defence) {
+		this.defence = defence;
+	}
+
+	public void setAttack(float attack) {
+		this.attack = attack;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setFamily(String family) {
+		this.family = family;
+	}
+
+	public void setAffinity(String affinity) {
+		this.affinity = affinity;
+	}
+
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	/**
-	 * @param description the description to set
-	 */
+
+	public void setSmallImageUrl(String smallImageUrl) {
+		this.smallImageUrl = smallImageUrl;
+	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	/**
-	 * @param properties the properties to set
-	 */
-	public void setProperties(String properties) {
-		this.properties = properties;
+
+	public void setComplete(Boolean complete) {
+		this.complete = complete;
 	}
-	
-	
 }

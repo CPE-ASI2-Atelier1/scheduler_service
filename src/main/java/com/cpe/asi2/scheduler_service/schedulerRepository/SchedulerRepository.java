@@ -4,8 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
+import com.cpe.asi2.scheduler_service.schedulerController.CardProperties;
 import com.cpe.asi2.scheduler_service.schedulerEntity.SchedulerEntity;
 
 import jakarta.transaction.Transactional;
@@ -29,9 +31,26 @@ public interface SchedulerRepository extends JpaRepository<SchedulerEntity, Inte
     @Modifying
     @Transactional
     @Query(value = "UPDATE Scheduler SET properties = :properties WHERE id = :id", nativeQuery = true)
-    void updateProperties(@Param("properties") String properties, @Param("id") Integer id);
+    void updateProperties(@Param("properties") CardProperties properties, @Param("id") Integer id);
 
     // Vérifie si une carte est complétée
     @Query(value = "SELECT complete FROM Scheduler WHERE id = :id", nativeQuery = true)
     Boolean verifyIfCompleted(@Param("id") Integer id);
+
+    // Récupère la description d'une carte avec un ID donné
+	String getDescription(Integer id);
+
+	// Récupère l'URL de l'image d'une carte avec un ID donné
+	String getImageUrl(Integer id);
+
+	// Récupère l'id du user d'une carte avec un ID donné
+	Integer getUserId(Integer id);
+
+	String getName(Integer id);
+
+	String getFamily(Integer id);
+
+	String getAffinity(Integer id);
+
+	String getSmallImageUrl(Integer id);
 }
