@@ -51,7 +51,7 @@ public class SchedulerEntity {
 	private String description;
 	
 	@Column(name="is_prop_ok")
-	private Boolean complete;
+	private Boolean isPropOk;
 	
 	public Integer getId() {
 		return id;
@@ -105,8 +105,8 @@ public class SchedulerEntity {
 		return description;
 	}
 
-	public Boolean getComplete() {
-		return complete;
+	public Boolean getIsPropOk() {
+		return isPropOk;
 	}
 
 	public void setId(Integer id) {
@@ -161,7 +161,7 @@ public class SchedulerEntity {
 		this.description = description;
 	}
 
-	public void setComplete(Boolean complete) {
-		this.complete = complete;
+	public void setIsPropOk(Boolean complete) {
+		this.isPropOk = complete;
 	}
 }
