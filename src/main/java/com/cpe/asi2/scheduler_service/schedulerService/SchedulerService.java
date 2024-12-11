@@ -98,15 +98,17 @@ public class SchedulerService {
 		
 		if (existingCard.isPresent()) {
 			wipCard = existingCard.get();
-			// Check if the Image URL has changed => If so we have to generate again the properties
-			if (wipCard.getImageUrl() != card.getImgUrl()) {
-				wipCard.setIsPropOk(false);
-				askForProperties(card.getImgUrl(), card.getId());
-			}
 		}
 		else {
 			wipCard = new SchedulerEntity();
 			wipCard.setIsPropOk(false);
+			wipCard = schedulerRepository.save(wipCard);
+		}
+		
+		// Check if the Image URL has changed => If so we have to generate again the properties
+		if (wipCard.getImageUrl() != card.getImgUrl() && card.getImgUrl() != "") {
+			wipCard.setIsPropOk(false);
+			askForProperties(card.getImgUrl(), card.getId());
 		}
 		
 		// Update or create the card
