@@ -5,7 +5,7 @@ public class CardProperties {
     private float hp;
     private float defence;
     private float attack;
-    private Integer id;
+    private Integer cardid;
     
 	public float getEnergy() {
 		return energy;
@@ -32,10 +32,10 @@ public class CardProperties {
 		this.attack = attack;
 	}
 	public Integer getId() {
-		return id;
+		return cardid;
 	}
 	public void setId(Integer id) {
-		this.id = id;
+		this.cardid = id;
 	}
    
 }
