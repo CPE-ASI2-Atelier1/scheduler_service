@@ -1,6 +1,8 @@
 package com.cpe.asi2.scheduler_service.schedulerController;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,14 +11,12 @@ import com.cpe.asi2.scheduler_service.schedulerService.SchedulerService;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 
-@RestController
-@RequestMapping("/sch")
-public class SchedulerRestController {
-	private final SchedulerService schedulerService;
 
-	public SchedulerRestController (SchedulerService schedulerService) {
-		this.schedulerService = schedulerService;
-	}
+//@RequestMapping("/sch")
+@RestController
+public class SchedulerRestController {
+	@Autowired
+	SchedulerService schedulerService;
 	
 //	@RequestMapping(method=RequestMethod.POST, value="/Image")
 //	public void putImage (@RequestParam String image_url, @RequestParam Integer id) {
@@ -40,20 +40,20 @@ public class SchedulerRestController {
 	}
 	
 	// Front request
-	@RequestMapping(method=RequestMethod.GET, value="/getWipCard/{id}")
+	@RequestMapping(method=RequestMethod.GET, value="/WipCard/{id}")
 	public PublicCardDTO GetWipCardById(@PathVariable Integer id) {
 		return schedulerService.getWipCardById(id);
 	}
 	
 	// Front request
-	@RequestMapping(method=RequestMethod.POST, value="/generateProps")
+	@RequestMapping(method=RequestMethod.POST, value="/Props")
 	public Integer GenerateProps(PublicCardDTO card) {
 		return schedulerService.generateProps(card);
 	}
 	
 	// Properties generation service request
 	@RequestMapping(method=RequestMethod.POST, value="/receiveProperties")
-	public void ReceiveProperties(CardProperties properties) {
+	public void ReceiveProperties(CardProperties properties) { //TODO: Attention je ne get pas un DTO direect mais un json faut que je fasse un Map<String, String> (voir ce que raph a fait)
 		schedulerService.receiveProperties(properties);
 	}
 	

@@ -163,15 +163,13 @@ public class SchedulerService {
 		return cardGenerated.getId();
 	}
 	
-	//TODO: Envoyer une requête à raph pour générer les propriétés:
 	public String askForProperties (String imgUrl, Integer id) {
-		//TODO: Mettre la bonne URL quand je la connaîtrai
-		String url = "";
+		String url = "http://localhost:8082";
 		
 		String response = webClientBuilder.baseUrl("{ \"url\": " + url + ", \"id\":" + id.toString() + "}")
 				.build()
 				.post()
-				.uri("/") // TODO: Mettre la bonne URL quand je la connaitrai
+				.uri("/properties")
 				.bodyValue(imgUrl)
 				.retrieve()
 		        .bodyToMono(String.class)
@@ -182,7 +180,7 @@ public class SchedulerService {
 	
 	public String postCard(PublicCardDTO requestBody) {
 		//TODO: Mettre la bonne URL quand je la connaîtrai
-		String url = "";
+		String url = "http://localhost:8082";
 		
 		String response = webClientBuilder.baseUrl(url)
 				.build()

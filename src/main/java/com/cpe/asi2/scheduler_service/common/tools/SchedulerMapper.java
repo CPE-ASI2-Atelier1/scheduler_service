@@ -1,11 +1,12 @@
 package com.cpe.asi2.scheduler_service.common.tools;
 
+import org.springframework.stereotype.Component;
+
 import com.cpe.asi2.atelier1.dto.PublicCardDTO;
 import com.cpe.asi2.scheduler_service.schedulerEntity.SchedulerEntity;
 
+@Component
 public class SchedulerMapper {
-
-	
 	public static PublicCardDTO fromSchedulerEntityToPublicCardDto(SchedulerEntity cE) {
 		PublicCardDTO cDto = new PublicCardDTO();
 		cDto.setAffinity(cE.getAffinity());
