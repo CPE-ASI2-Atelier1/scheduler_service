@@ -166,7 +166,7 @@ public class SchedulerService {
 	public String askForProperties (String imgUrl, Integer id) {
 		String url = "http://localhost:8082";
 		
-		String response = webClientBuilder.baseUrl("{ \"url\": " + url + ", \"id\":" + id.toString() + "}")
+		String response = webClientBuilder.baseUrl("{ \"url\": " + url + ", \"cardid\":" + id.toString() + "}")
 				.build()
 				.post()
 				.uri("/properties")
