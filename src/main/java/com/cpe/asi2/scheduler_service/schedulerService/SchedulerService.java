@@ -1,8 +1,6 @@
 package com.cpe.asi2.scheduler_service.schedulerService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -78,47 +76,51 @@ public class SchedulerService {
 	}
 
 	public List<PublicCardDTO> getWIPCards() {
-		List<PublicCardDTO> wipCards = new ArrayList<PublicCardDTO>(); 
-		List<SchedulerEntity> cardList = new ArrayList<SchedulerEntity>();
-		
-		schedulerRepository.findAll().forEach(cardList::add);
+		List<PublicCardDTO> wipCards = new ArrayList<>();
+
+        List<SchedulerEntity> cardList = new ArrayList<>(schedulerRepository.findAll());
 		cardList.forEach(card -> wipCards.add(SchedulerMapper.fromSchedulerEntityToPublicCardDto(card)));
 		return wipCards;
 	}
 	
 	public PublicCardDTO getWipCardById(Integer id) {
 		SchedulerEntity existingCard = schedulerRepository.findWipById(id);
-		PublicCardDTO card = SchedulerMapper.fromSchedulerEntityToPublicCardDto(existingCard);
-		return card;
+        return SchedulerMapper.fromSchedulerEntityToPublicCardDto(existingCard);
 	}
 
 	public Integer generateProps(PublicCardDTO card) {
-		Optional<SchedulerEntity> existingCard = schedulerRepository.findById(card.getId());
 		SchedulerEntity wipCard;
-		
-		if (existingCard.isPresent()) {
-			wipCard = existingCard.get();
+		String image = card.getImgUrl();
+		Integer id = card.getId();
+		boolean redoProps;
+
+		// On a reçu un Id de carte : on la cherche en DB
+		if (id != null && id != 0) {
+			Optional<SchedulerEntity> entity = schedulerRepository.findById(id);
+			// Erreur : on essaye de toucher une carte qui n'existe plus / pas
+			if (entity.isEmpty()){
+				return -1;
+			}
+			wipCard = entity.get();
+			String wipImage = wipCard.getImageUrl();
+			redoProps = wipImage == null || !wipImage.equals(image);
 		}
+		// On a pas reçu d'ID : on crée la carte
 		else {
 			wipCard = new SchedulerEntity();
 			wipCard.setIsPropOk(false);
 			wipCard = schedulerRepository.save(wipCard);
+			id = wipCard.getId();
+			redoProps = true;
 		}
-		
-		// Check if the Image URL has changed => If so we have to generate again the properties
-		if (wipCard.getImageUrl() != card.getImgUrl() && card.getImgUrl() != "") {
+
+		//if (image != null && !wipCard.getImageUrl().equals(image)) {
+		if (redoProps){
 			wipCard.setIsPropOk(false);
-			askForProperties(card.getImgUrl(), card.getId());
+			askForProperties(image, id);
 		}
-		
-		// Update or create the card
-		
-		//TODO: Peut être les initialiser à null si on part du principe qu'à la création de cartes il n'y a pas encore de propriétés
-		//schEntity.setHp(card.getHp());
-		//schEntity.setAttack(card.getAttack());
-		//schEntity.setDefence(card.getDefence());
-		//schEntity.setEnergy(card.getEnergy());
-		
+
+		// Update if necessary
 		wipCard.setAffinity(card.getAffinity());
 		wipCard.setDescription(card.getDescription());
 		wipCard.setFamily(card.getFamily());
@@ -127,17 +129,20 @@ public class SchedulerService {
 		wipCard.setPrice(card.getPrice());
 		wipCard.setSmallImageUrl(card.getImgUrl());
 		wipCard.setUserId(card.getUserId());
+		schedulerRepository.save(wipCard);
+
+		// Vérifier si la carte est finalisée
+//		SchedulerEntity cardGenerated = schedulerRepository.save(wipCard);
+//		if (isCardCompeted(cardGenerated.getId())) {
+//			postCard(SchedulerMapper.fromSchedulerEntityToPublicCardDto(cardGenerated));
+//		}
 		
-		SchedulerEntity cardGenerated = schedulerRepository.save(wipCard);
-		if (isCardCompeted(cardGenerated.getId())) {
-			postCard(SchedulerMapper.fromSchedulerEntityToPublicCardDto(cardGenerated));
-		}
-		
-		return cardGenerated.getId();
+		//return cardGenerated.getId();
+		return wipCard.getId();
 	}
 
 	public void receiveProperties(CardProperties properties) {
-		SchedulerEntity card = schedulerRepository.findWipById(properties.getId());
+		SchedulerEntity card = schedulerRepository.findWipById(properties.getCardid());
 		card.setHp(properties.getHp());
 		card.setAttack(properties.getAttack());
 		card.setDefence(properties.getDefence());
@@ -145,7 +150,7 @@ public class SchedulerService {
 		card.setIsPropOk(false);
 		schedulerRepository.save(card);
 		
-		if (isCardCompeted(properties.getId())) {
+		if (isCardCompeted(properties.getCardid())) {
 			postCard(SchedulerMapper.fromSchedulerEntityToPublicCardDto(card));
 		}
 	}
@@ -166,17 +171,22 @@ public class SchedulerService {
 	}
 	
 	public String askForProperties (String imgUrl, Integer id) {
-		String url = "http://localhost:8082";
-		
-		String response = webClientBuilder.baseUrl("{ \"url\": " + url + ", \"cardid\":" + id.toString() + "}")
+		String url = "http://localhost:8082"; // TODO : get from env file
+
+		// Construire un objet pour le corps de la requête
+		Map<String, Object> requestBody = new HashMap<>();
+		requestBody.put("url", imgUrl);
+		requestBody.put("cardid", id);
+
+		String response = webClientBuilder.baseUrl(url)
 				.build()
 				.post()
 				.uri("/properties")
-				.bodyValue(imgUrl)
+				.bodyValue(requestBody) // Passer l'objet dans le corps de la requête
 				.retrieve()
-		        .bodyToMono(String.class)
-		        .block();
-		
+				.bodyToMono(String.class)
+				.block(); // Bloquer jusqu'à ce qu'une réponse soit reçue
+
 		return response;
 	}
 	

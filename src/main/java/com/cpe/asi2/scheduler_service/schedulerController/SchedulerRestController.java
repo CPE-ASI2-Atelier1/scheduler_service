@@ -3,13 +3,9 @@ package com.cpe.asi2.scheduler_service.schedulerController;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.cpe.asi2.atelier1.dto.PublicCardDTO;
 import com.cpe.asi2.scheduler_service.schedulerService.SchedulerService;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 
 
 //@RequestMapping("/sch")
@@ -47,19 +43,19 @@ public class SchedulerRestController {
 	
 	// Front request
 	@RequestMapping(method=RequestMethod.POST, value="/Props")
-	public Integer GenerateProps(PublicCardDTO card) {
+	public Integer GenerateProps(@RequestBody PublicCardDTO card) {
 		return schedulerService.generateProps(card);
 	}
 	
 	// Properties generation service request
 	@RequestMapping(method=RequestMethod.POST, value="/receiveProperties")
-	public void ReceiveProperties(CardProperties properties) { //TODO: Attention je ne get pas un DTO direect mais un json faut que je fasse un Map<String, String> (voir ce que raph a fait)
+	public void ReceiveProperties(@RequestBody CardProperties properties) { //TODO: Attention je ne get pas un DTO direect mais un json faut que je fasse un Map<String, String> (voir ce que raph a fait)
 		schedulerService.receiveProperties(properties);
 	}
 	
 	// Front request
 	@RequestMapping(method=RequestMethod.POST, value="/updateWIP")
-	public Integer UpdateWIP(PublicCardDTO card) {
+	public Integer UpdateWIP(@RequestBody PublicCardDTO card) {
 		return schedulerService.updateWIP(card);
 	}
 }

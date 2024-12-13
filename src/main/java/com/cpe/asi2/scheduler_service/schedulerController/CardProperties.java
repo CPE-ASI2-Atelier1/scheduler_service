@@ -31,9 +31,15 @@ public class CardProperties {
 	public void setAttack(float attack) {
 		this.attack = attack;
 	}
-	public Integer getId() {
+
+	public Integer getCardid() {
 		return cardid;
 	}
+
+	public void setCardid(Integer cardid) {
+		this.cardid = cardid;
+	}
+
 	public void setId(Integer id) {
 		this.cardid = id;
 	}
