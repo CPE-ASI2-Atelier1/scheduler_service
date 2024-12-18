@@ -1,5 +1,6 @@
 package com.cpe.asi2.scheduler_service.schedulerRepository;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -44,4 +45,6 @@ public interface SchedulerRepository extends JpaRepository<SchedulerEntity, Inte
 	Optional<SchedulerEntity> findById(Integer id);
 	
 	SchedulerEntity findWipById(Integer id);
+	
+	List<SchedulerEntity> findByUserId(Integer id);
 }

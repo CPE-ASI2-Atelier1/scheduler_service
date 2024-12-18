@@ -83,8 +83,22 @@ public class SchedulerService {
 		return wipCards;
 	}
 	
+	public List<PublicCardDTO> getWIPCardsByUserId(Integer id) {
+		List<PublicCardDTO> wipCards = new ArrayList<>();
+
+        List<SchedulerEntity> cardList = new ArrayList<>(schedulerRepository.findByUserId(id));
+		cardList.forEach(card -> wipCards.add(SchedulerMapper.fromSchedulerEntityToPublicCardDto(card)));
+		return wipCards;
+	}
+	
 	public PublicCardDTO getWipCardById(Integer id) {
 		SchedulerEntity existingCard = schedulerRepository.findWipById(id);
+//		if (existingCard == null) {
+//			existingCard = new SchedulerEntity();
+//			existingCard.setId(id);
+//			existingCard.setIsPropOk(false);
+//			existingCard = schedulerRepository.save(existingCard);
+//		}
         return SchedulerMapper.fromSchedulerEntityToPublicCardDto(existingCard);
 	}
 
@@ -152,6 +166,7 @@ public class SchedulerService {
 		
 		if (isCardCompeted(properties.getCardid())) {
 			postCard(SchedulerMapper.fromSchedulerEntityToPublicCardDto(card));
+			deleteCard(properties.getCardid());
 		}
 	}
 
@@ -167,6 +182,11 @@ public class SchedulerService {
 		wipCard.setSmallImageUrl(card.getImgUrl());
 		wipCard.setUserId(card.getUserId());
 		SchedulerEntity cardGenerated = schedulerRepository.save(wipCard);
+		
+//		if (isCardCompeted(cardGenerated.getId())) {
+//			postCard(SchedulerMapper.fromSchedulerEntityToPublicCardDto(cardGenerated));
+//			deleteCard(cardGenerated.getId());
+//		}
 		return cardGenerated.getId();
 	}
 	

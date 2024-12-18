@@ -36,6 +36,12 @@ public class SchedulerRestController {
 	}
 	
 	// Front request
+	@RequestMapping(method=RequestMethod.GET, value="/wipCards/{id}")
+	public List<PublicCardDTO> GetWIPCardsByUserId(@PathVariable Integer id) {
+		return schedulerService.getWIPCardsByUserId(id);
+	}
+	
+	// Front request
 	@RequestMapping(method=RequestMethod.GET, value="/WipCard/{id}")
 	public PublicCardDTO GetWipCardById(@PathVariable Integer id) {
 		return schedulerService.getWipCardById(id);
@@ -57,6 +63,13 @@ public class SchedulerRestController {
 	@RequestMapping(method=RequestMethod.POST, value="/updateWIP")
 	public Integer UpdateWIP(@RequestBody PublicCardDTO card) {
 		return schedulerService.updateWIP(card);
+	}
+	
+	// Front request
+	@RequestMapping(method=RequestMethod.POST, value="/deleteWIP")
+	public void UpdateWIP(@RequestBody Integer wipId) {
+		System.out.println("Received ID: " + wipId);
+		schedulerService.deleteCard(wipId);
 	}
 }
 
