@@ -49,12 +49,9 @@ public class SchedulerService {
 	
 	public PublicCardDTO getWipCardById(Integer id) {
 		SchedulerEntity existingCard = schedulerRepository.findWipById(id);
-//		if (existingCard == null) {
-//			existingCard = new SchedulerEntity();
-//			existingCard.setId(id);
-//			existingCard.setIsPropOk(false);
-//			existingCard = schedulerRepository.save(existingCard);
-//		}
+		if (existingCard == null) {
+			return null;
+		}
         return SchedulerMapper.fromSchedulerEntityToPublicCardDto(existingCard);
 	}
 
@@ -84,7 +81,6 @@ public class SchedulerService {
 			redoProps = true;
 		}
 
-		//if (image != null && !wipCard.getImageUrl().equals(image)) {
 		if (redoProps){
 			wipCard.setIsPropOk(false);
 			askForProperties(image, id);
@@ -101,13 +97,6 @@ public class SchedulerService {
 		wipCard.setUserId(card.getUserId());
 		schedulerRepository.save(wipCard);
 
-		// Vérifier si la carte est finalisée
-//		SchedulerEntity cardGenerated = schedulerRepository.save(wipCard);
-//		if (isCardCompeted(cardGenerated.getId())) {
-//			postCard(SchedulerMapper.fromSchedulerEntityToPublicCardDto(cardGenerated));
-//		}
-		
-		//return cardGenerated.getId();
 		return wipCard.getId();
 	}
 
@@ -119,11 +108,6 @@ public class SchedulerService {
 		card.setEnergy(properties.getEnergy());
 		card.setIsPropOk(false);
 		schedulerRepository.save(card);
-		
-		if (isCardCompeted(properties.getCardid())) {
-			postCard(SchedulerMapper.fromSchedulerEntityToPublicCardDto(card));
-			deleteCard(properties.getCardid());
-		}
 	}
 
 	public Integer updateWIP(PublicCardDTO card) {
@@ -166,21 +150,21 @@ public class SchedulerService {
 		return response;
 	}
 	
-	public String postCard(PublicCardDTO requestBody) {
-		//TODO: Mettre la bonne URL quand je la connaîtrai
-		String url = "http://localhost:8082";
-
-		String response = webClientBuilder.baseUrl(url)
-				.build()
-				.post()
-				.uri("/createCard") // De tête, à vérifier
-				.bodyValue(requestBody)
-				.retrieve()
-		        .bodyToMono(String.class)
-		        .block();
-
-		return response;
-	}
+//	public String postCard(PublicCardDTO requestBody) {
+//
+//		String url = celle du monolith
+//
+//		String response = webClientBuilder.baseUrl(url)
+//				.build()
+//				.post()
+//				.uri("/createCard") // De tête, à vérifier
+//				.bodyValue(requestBody)
+//				.retrieve()
+//		        .bodyToMono(String.class)
+//		        .block();
+//
+//		return response;
+//	}
 	
 	public boolean isCardCompeted(Integer id) {
 		Optional<SchedulerEntity> optionnalWipCard = schedulerRepository.findById(id);
