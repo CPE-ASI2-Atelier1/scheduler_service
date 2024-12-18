@@ -2,6 +2,7 @@ package com.cpe.asi2.scheduler_service.schedulerService;
 
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -13,6 +14,9 @@ import com.cpe.asi2.atelier1.dto.PublicCardDTO;
 
 @Service
 public class SchedulerService {
+
+	@Value("${property.service.url}")
+	private String propertyServiceUrl;
 	
 	private final SchedulerRepository schedulerRepository;
 	private final WebClient.Builder webClientBuilder;
@@ -21,54 +25,6 @@ public class SchedulerService {
 		this.schedulerRepository = schedulerRepository;
 		this.webClientBuilder = webClientBuilder;
 	}
-	
-//	public Boolean verifyIfCardCompleted (Integer id) {
-//		return schedulerRepository.verifyIfCompleted(id);
-//	}
-//	
-//	public String putImage(String image_url, Integer id) {
-//		schedulerRepository.updateImage(image_url, id);
-//		System.out.println("The DB population request has been sent for the image");
-//		return "Ok";
-//	}
-//	
-//	public String putDescription(String description, Integer id) {
-//		schedulerRepository.updateDescription(description, id);
-//		System.out.println("The DB population request has been sent for the description");
-//		return "Ok";
-//	}
-//	
-//	public String putProperties(CardProperties properties, Integer id) {
-//		schedulerRepository.updateProperties(properties, id); //TODO : faire le nécessaire pour les mettre dans la BDD
-//		System.out.println("The DB population request has been sent for the description");
-//		
-//		if (verifyIfCardCompleted(id)) {
-//			
-//			//TODO: Faire la requête pour créer la carte
-//			final PublicCardDTO card = new PublicCardDTO(id,
-//											properties.getEnergy(),
-//											properties.getHp(),
-//											properties.getDefence(),
-//											properties.getAttack(),
-//											properties.getPrice(),
-//											schedulerRepository.getUserId(id),
-//											schedulerRepository.getName(id),
-//											schedulerRepository.getDescription(id),
-//											schedulerRepository.getFamily(id),
-//											schedulerRepository.getAffinity(id),
-//											schedulerRepository.getImageUrl(id),
-//											schedulerRepository.getSmallImageUrl(id)
-//											);
-//			
-//			postCard(card);
-//			System.out.println("The card is completed and a request has been sent to add it into the inventory");
-//			
-//			deleteCard(id);
-//			System.out.println("The card has been removed from the incompleted cards");
-//		}
-//		
-//		return "Ok";
-//	}
 
 	public void deleteCard(Integer id) {
 		schedulerRepository.deleteById(id);
@@ -171,14 +127,14 @@ public class SchedulerService {
 	}
 	
 	public String askForProperties (String imgUrl, Integer id) {
-		String url = "http://localhost:8082"; // TODO : get from env file
+		//String url = "http://localhost:8082"; // TODO : get from env file
 
 		// Construire un objet pour le corps de la requête
 		Map<String, Object> requestBody = new HashMap<>();
 		requestBody.put("url", imgUrl);
 		requestBody.put("cardid", id);
 
-		String response = webClientBuilder.baseUrl(url)
+		String response = webClientBuilder.baseUrl(this.propertyServiceUrl)
 				.build()
 				.post()
 				.uri("/properties")
@@ -193,7 +149,7 @@ public class SchedulerService {
 	public String postCard(PublicCardDTO requestBody) {
 		//TODO: Mettre la bonne URL quand je la connaîtrai
 		String url = "http://localhost:8082";
-		
+
 		String response = webClientBuilder.baseUrl(url)
 				.build()
 				.post()
@@ -202,7 +158,7 @@ public class SchedulerService {
 				.retrieve()
 		        .bodyToMono(String.class)
 		        .block();
-		
+
 		return response;
 	}
 	
